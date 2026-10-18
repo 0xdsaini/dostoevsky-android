@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Idiot · Audiobook</title>
+<style>
+:root{color-scheme:light;--bg:#f5f6f8;--panel:#fff;--text:#20242b;--muted:#687080;--line:#e1e5eb;--accent:#5b63e6;--soft:#eef0ff;--good:#16835d;--bad:#b45309;--shadow:0 8px 28px #1d27350b}
+[data-theme="dark"]{color-scheme:dark;--bg:#101216;--panel:#191d24;--text:#edf0f5;--muted:#a0a8b6;--line:#303743;--accent:#9ca3ff;--soft:#292d49;--good:#62d6a5;--bad:#fbbf72;--shadow:0 8px 28px #0003}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);padding:9px 13px}button:hover{border-color:var(--accent)}button:disabled{opacity:.4;cursor:not-allowed}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:15px max(18px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:750;font-size:18px;letter-spacing:-.3px}.sub{color:var(--muted);font-size:12px}.layout{max-width:1100px;margin:26px auto;padding:0 18px;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:20px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);overflow:hidden}.now{padding:24px}.eyebrow{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1.3px;font-weight:700}.chapter-title{font-size:clamp(24px,4vw,36px);line-height:1.15;margin:7px 0 5px;letter-spacing:-.8px}.filename{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+audio{width:100%;margin:24px 0 14px} .controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.reader-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.seek-btn{min-width:86px}
+.text-fullscreen{display:none;position:fixed;inset:0;z-index:1000;background:var(--bg);color:var(--text);width:100%;height:100vh;height:100dvh;padding:0;overflow:hidden;overscroll-behavior:none}
+.text-fullscreen.open{display:flex;flex-direction:column}.text-fullscreen-head{position:absolute;top:10px;right:10px;z-index:2;display:flex;align-items:center;gap:6px;padding:5px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel) 88%,transparent);opacity:.22;transition:opacity .2s}.text-fullscreen-head:hover,.text-fullscreen-head:focus-within{opacity:1}.text-fullscreen-head button{padding:6px 9px;font-size:12px;white-space:nowrap}.text-fullscreen-head .active{background:var(--soft);border-color:var(--accent)}.fullscreen-speed{display:flex;align-items:center;gap:4px}.fullscreen-speed button{min-width:30px;padding:6px 8px}.speed-readout{min-width:42px;text-align:center;font-variant-numeric:tabular-nums;font-size:12px}.speed-select{max-width:90px;padding:6px 4px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font:inherit;font-size:12px}.rsvp-view{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:hidden;touch-action:pan-y}.rsvp-word{font-family:Georgia,"Times New Roman",serif;font-size:clamp(38px,8vw,80px);line-height:1.25;overflow-wrap:anywhere}.rsvp-meta{display:none}.text-fullscreen .reader{flex:1;min-height:0;max-height:none;height:auto;margin:0;padding:clamp(18px,4vw,42px);border:0;border-radius:0;font-size:clamp(19px,2.2vh,25px);line-height:2;overflow:auto;overscroll-behavior:contain}.text-fullscreen .reader-note{font-size:12px;color:var(--muted)}body.text-open{overflow:hidden;overscroll-behavior:none;touch-action:none}#textFullscreen:fullscreen{width:100vw;height:100vh;height:100dvh;background:var(--bg)}#textFullscreen:-webkit-full-screen{width:100vw;height:100vh;background:var(--bg)}@media(max-width:600px){.text-fullscreen-head{top:env(safe-area-inset-top, 0px);right:env(safe-area-inset-right, 0px);left:env(safe-area-inset-left, auto);max-width:100vw;gap:3px;padding:4px;border-radius:0 0 0 10px;opacity:.5}.text-fullscreen-head button{padding:7px 8px}.rsvp-word{font-size:clamp(34px,10vw,64px)}.text-fullscreen .reader{padding:calc(18px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px))}}[hidden]{display:none!important}.primary{background:var(--accent);border-color:var(--accent);color:white;font-weight:650}.primary:hover{opacity:.9}.progressline{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:4px}
+.status{padding:12px 14px;border-radius:11px;background:var(--bg);color:var(--muted);font-size:13px;margin-top:17px}.status.good{color:var(--good)}.status.warn{color:var(--bad)}
+.list-head{padding:16px;border-bottom:1px solid var(--line)}.list-head h2{font-size:16px;margin:0 0 10px}.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);outline:none}.search:focus{border-color:var(--accent)}
+.filters{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}.filter{padding:5px 9px;font-size:12px;border-radius:999px}.filter.active{background:var(--soft);border-color:var(--accent)}
+.chapters{max-height:calc(100vh - 250px);min-height:300px;overflow:auto}.chapter{width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;text-align:left;padding:12px 15px;display:flex;gap:10px;align-items:center;background:transparent}.chapter:hover{background:var(--bg)}.chapter.active{background:var(--soft)}.number{width:29px;height:29px;flex:0 0 29px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:11px;color:var(--muted);font-weight:700}.chapter.active .number{background:var(--accent);color:white}.chapter-info{min-width:0;flex:1}.chapter-name{font-weight:600}.chapter-file{font-size:11px;color:var(--muted);overflow-wrap:anywhere}.dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:0 0 8px}.dot.yes{background:var(--good)}.empty{padding:22px;color:var(--muted);text-align:center}
+
+.reader-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.reader-note{font-size:12px;color:var(--muted);margin-top:3px}
+.reader{margin-top:14px;max-height:55vh;overflow:auto;padding:18px;background:var(--bg);border:1px solid var(--line);border-radius:12px;font-family:Georgia,"Times New Roman",serif;font-size:19px;line-height:2.05;white-space:normal}
+.word{border-radius:4px;padding:1px 0;transition:background .08s,color .08s}
+.word.current{background:#ffe082;color:#211a00;box-shadow:0 0 0 2px #ffe082}
+[data-theme="dark"] .word.current{background:#f5c451;color:#211a00;box-shadow:0 0 0 2px #f5c451}
+.word-space{white-space:pre-wrap}
+.footer{max-width:1100px;padding:0 18px;margin:0 auto 28px;color:var(--muted);font-size:12px}.keys{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}kbd{font:11px ui-monospace,monospace;padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
+@media(max-width:760px){.layout{grid-template-columns:1fr;margin:16px auto}.chapters{max-height:48vh;min-height:220px}header{padding:12px 16px}.now{padding:19px}}
+
+/* Apple-inspired refinement: calm surfaces, restrained color, compact icon controls */
+:root{--bg:#f5f5f7;--panel:rgba(255,255,255,.88);--text:#1d1d1f;--muted:#86868b;--line:rgba(29,29,31,.10);--accent:#0071e3;--soft:rgba(0,113,227,.10);--good:#248a5a;--bad:#b45309;--shadow:0 12px 40px rgba(0,0,0,.055)}
+[data-theme="dark"]{--bg:#000;--panel:rgba(28,28,30,.92);--text:#f5f5f7;--muted:#98989d;--line:rgba(255,255,255,.12);--accent:#0a84ff;--soft:rgba(10,132,255,.18);--good:#30d158;--bad:#ffb340;--shadow:0 12px 40px rgba(0,0,0,.25)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",sans-serif;letter-spacing:-.015em;-webkit-font-smoothing:antialiased}
+header{backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom-color:var(--line);padding-top:13px;padding-bottom:13px}
+.brand{font-size:17px;letter-spacing:-.45px;font-weight:700}.sub{letter-spacing:0}
+.layout{gap:18px;margin-top:24px;margin-bottom:24px}.panel{border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.now{padding:clamp(20px,3vw,32px)}.chapter-title{font-size:clamp(28px,4vw,40px);letter-spacing:-1.2px;font-weight:700}.eyebrow{letter-spacing:.09em;font-size:11px}
+button{border:1px solid var(--line);border-radius:999px;padding:9px 13px;min-height:38px;background:color-mix(in srgb,var(--panel) 94%,var(--bg));box-shadow:0 1px 1px rgba(0,0,0,.025);transition:background .16s,border-color .16s,transform .16s,color .16s}
+button:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--soft)}button:active{transform:scale(.97)}button:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 42%,transparent);outline-offset:2px}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff}.primary:hover{background:color-mix(in srgb,var(--accent) 86%,#000);color:#fff}
+.controls{gap:8px}.controls button{min-width:40px;padding:8px 11px}.controls .seek-btn{min-width:50px;font-variant-numeric:tabular-nums}.controls label{margin-left:8px}.speed-select{border-radius:999px;padding:8px 12px;background:var(--panel)}
+audio{margin:20px 0 12px} .status{border-radius:14px;background:color-mix(in srgb,var(--bg) 70%,var(--panel));margin-top:16px}
+.reader-head{margin-top:24px;padding-top:18px}.reader{border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--bg) 82%,var(--panel));font-size:20px;line-height:2.05;padding:22px}
+.word.current{background:#ffd60a;color:#1d1d1f;box-shadow:0 0 0 2px #ffd60a}[data-theme="dark"] .word.current{background:#ffd60a;color:#1d1d1f;box-shadow:0 0 0 2px #ffd60a}
+.list-head{padding:20px;border-bottom-color:var(--line)}.list-head h2{font-size:16px;letter-spacing:-.3px}.search{border-radius:12px;background:color-mix(in srgb,var(--bg) 80%,var(--panel));padding:11px 13px}.filter{border-radius:999px}.chapter{padding:13px 17px}.chapter:hover{background:var(--soft)}.number{border-radius:50%;width:31px;height:31px;flex-basis:31px}.chapter.active{background:var(--soft)}
+.text-fullscreen{background:var(--bg);isolation:isolate}.text-fullscreen.open{min-height:100%;min-height:100dvh}.text-fullscreen-head{top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));left:auto;gap:5px;padding:6px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:999px;background:color-mix(in srgb,var(--panel) 82%,transparent);box-shadow:0 8px 32px rgba(0,0,0,.09);backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);opacity:.18}
+.text-fullscreen-head:hover,.text-fullscreen-head:focus-within{opacity:1}.text-fullscreen-head button{display:grid;place-items:center;min-width:38px;min-height:38px;padding:0;border-radius:50%;font-size:15px;font-weight:600}.text-fullscreen-head button.active{background:var(--accent);color:#fff;border-color:var(--accent)}.text-fullscreen-head button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}.text-fullscreen-head .function-toggle{font-size:11px;letter-spacing:-.6px;min-width:42px;border-radius:999px;padding:0 8px}.text-fullscreen-head .function-toggle[aria-pressed="true"]{background:var(--soft);color:var(--accent);border-color:var(--accent)}.fullscreen-speed{gap:2px}.fullscreen-speed button{min-width:32px;min-height:34px;font-size:17px}.speed-readout{min-width:34px;font-size:12px}.text-fullscreen .reader{padding:clamp(22px,6vw,72px);font-size:clamp(21px,2.6vh,29px);line-height:2.08;scroll-padding-block:40vh}.rsvp-view{padding:24px}.rsvp-word{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;font-weight:650;letter-spacing:-.045em;font-size:clamp(44px,9vw,92px)}
+#themeBtn{min-width:40px;width:40px;padding:0;display:grid;place-items:center;font-size:18px}#followBtn{min-width:40px;width:40px;padding:0;font-size:17px}#fullTextBtn{min-width:40px;width:40px;padding:0;font-size:18px}
+@media(max-width:760px){.layout{gap:14px;margin:12px auto}.now{padding:18px}.panel{border-radius:20px}.controls{gap:6px}.controls button{min-width:38px;padding:7px 9px}.controls .seek-btn{min-width:45px}.reader-actions{gap:5px}.reader-head{align-items:center}.text-fullscreen-head{top:calc(7px + env(safe-area-inset-top,0px));right:calc(7px + env(safe-area-inset-right,0px));gap:3px;padding:4px;opacity:.34}.text-fullscreen-head button{min-width:34px;min-height:34px;font-size:14px}.text-fullscreen-head .function-toggle{min-width:39px;font-size:10px}.fullscreen-speed button{min-width:29px;min-height:32px}.text-fullscreen .reader{padding:calc(24px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px));font-size:clamp(19px,2.4vh,25px);line-height:2}.rsvp-word{font-size:clamp(40px,11vw,70px)}}
+
+
+/* Final reading-first layout: controls dock at the bottom, never at the top. */
+.text-fullscreen-head{
+  top:auto !important;
+  bottom:calc(12px + env(safe-area-inset-bottom,0px)) !important;
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:nowrap;
+  max-width:calc(100vw - 20px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));
+  padding:7px;
+  gap:5px;
+  border:1px solid color-mix(in srgb,var(--line) 70%,transparent);
+  border-radius:999px;
+  background:color-mix(in srgb,var(--panel) 82%,transparent);
+  box-shadow:0 8px 32px rgba(0,0,0,.12);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  opacity:.34;
+  transition:opacity .2s ease, transform .2s ease;
+}
+.text-fullscreen-head:hover,.text-fullscreen-head:focus-within{opacity:1}
+.text-fullscreen-head button{flex:0 0 auto;min-width:38px;min-height:38px;width:38px;height:38px;padding:0;border-radius:50%;}
+.text-fullscreen-head .function-toggle{min-width:38px;width:38px;padding:0;border-radius:50%;font-size:13px;letter-spacing:-.5px}
+.text-fullscreen .reader{
+  padding-top:clamp(26px,7vh,72px);
+  padding-bottom:calc(112px + env(safe-area-inset-bottom,0px));
+  scroll-padding-top:40%;
+  scroll-padding-bottom:112px;
+}
+.rsvp-view{padding:24px 20px calc(112px + env(safe-area-inset-bottom,0px));}
+#textFullscreen:fullscreen,#textFullscreen:-webkit-full-screen{
+  position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;
+  padding:env(safe-area-inset-top,0px) 0 0;background:var(--bg);
+}
+@media(max-width:600px){
+  .text-fullscreen-head{bottom:calc(8px + env(safe-area-inset-bottom,0px)) !important;gap:3px;padding:5px;max-width:calc(100vw - 12px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));opacity:.42}
+  .text-fullscreen-head button{width:34px;height:34px;min-width:34px;min-height:34px;font-size:14px}
+  .text-fullscreen-head .function-toggle{width:34px;height:34px;min-width:34px;font-size:12px}
+  .fullscreen-speed{gap:1px}
+  .fullscreen-speed button{width:29px;height:32px;min-width:29px;min-height:32px}
+  .speed-readout{min-width:29px;font-size:11px}
+  .text-fullscreen .reader{padding:calc(22px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px)) calc(120px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px));font-size:clamp(19px,2.4vh,25px);line-height:2}
+  .rsvp-view{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+}
+@media(hover:none){.text-fullscreen-head{opacity:.62}}
+
+
+/* Quiet, Apple-inspired fullscreen: unobstructed reading, dock revealed on demand. */
+.reading-topline{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;justify-content:center;gap:9px;align-items:center;pointer-events:none;color:var(--muted);font-size:10px;letter-spacing:.12em;font-weight:650;opacity:.72}
+.reading-part{opacity:.7;font-weight:500}
+.text-fullscreen-head{top:auto!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:5px;padding:7px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:999px;background:color-mix(in srgb,var(--panel) 78%,transparent);box-shadow:0 10px 36px rgba(0,0,0,.13);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);opacity:1;transition:opacity .22s ease,transform .22s ease;max-width:calc(100vw - 18px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));}
+.text-fullscreen:not(.controls-visible) .text-fullscreen-head{opacity:0;pointer-events:none;transform:translate(-50%,12px)}
+.text-fullscreen-head button{display:grid;place-items:center;flex:0 0 auto;width:40px;height:40px;min-width:40px;min-height:40px;padding:0;border-radius:50%;font-size:17px;background:transparent;border-color:transparent;box-shadow:none}
+.text-fullscreen-head button.active,.text-fullscreen-head button[aria-pressed="true"]{background:var(--soft);color:var(--accent);border-color:transparent}
+.text-fullscreen-head .dock-play{width:46px;height:46px;min-width:46px;min-height:46px;background:var(--text);color:var(--bg);font-size:19px}
+.text-fullscreen-head .dock-play:hover{background:var(--accent);color:white}
+.dock-divider{height:24px;width:1px;background:var(--line);margin:0 2px;flex:0 0 1px}
+.settings-sheet{position:absolute;z-index:5;bottom:calc(76px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(340px,calc(100vw - 28px));padding:17px;border:1px solid var(--line);border-radius:22px;background:color-mix(in srgb,var(--panel) 90%,transparent);box-shadow:0 16px 50px rgba(0,0,0,.18);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%)}
+.settings-title{font-size:13px;font-weight:700;margin:0 0 13px;color:var(--muted)}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:4px 0 14px;font-size:14px}.settings-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent;padding:15px 0 2px;box-shadow:none;font-size:14px}.toggle-track{width:42px;height:26px;border-radius:99px;background:#8e8e93;display:inline-flex;align-items:center;padding:3px;flex:0 0 auto;transition:background .2s}.toggle-knob{width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:transform .2s}.settings-toggle[aria-pressed="true"] .toggle-track{background:#34c759}.settings-toggle[aria-pressed="true"] .toggle-knob{transform:translateX(16px)}
+.text-fullscreen .reader{padding-top:calc(52px + env(safe-area-inset-top,0px));padding-bottom:calc(104px + env(safe-area-inset-bottom,0px));scroll-padding-top:40%;scroll-padding-bottom:110px}
+.rsvp-view{padding:calc(40px + env(safe-area-inset-top,0px)) 20px calc(110px + env(safe-area-inset-bottom,0px))}
+#textFullscreen:fullscreen,#textFullscreen:-webkit-full-screen{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;background:var(--bg)}
+@media(max-width:600px){.reading-topline{top:calc(10px + env(safe-area-inset-top,0px));font-size:9px}.text-fullscreen-head{bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;gap:2px;padding:5px;max-width:calc(100vw - 12px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px))}.text-fullscreen-head button{width:34px;height:34px;min-width:34px;min-height:34px;font-size:15px}.text-fullscreen-head .dock-play{width:42px;height:42px;min-width:42px;min-height:42px}.dock-divider{height:20px;margin:0 1px}.settings-sheet{bottom:calc(66px + env(safe-area-inset-bottom,0px));padding:15px}.text-fullscreen .reader{padding:calc(42px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px)) calc(100px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px));font-size:clamp(19px,2.4vh,25px);line-height:2}.rsvp-view{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}}
+@media(hover:none){.text-fullscreen-head{box-shadow:0 6px 24px rgba(0,0,0,.1)}}
+
+
+/* Fix the reading-mode transport: rewind, play and forward must sit in one horizontal row. */
+.dock-transport{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:2px!important;
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+}
+.dock-transport > button{position:relative;top:0!important;align-self:center!important;margin:0!important;}
+.text-fullscreen-head .dock-transport .skip-ten{width:36px;height:40px;min-width:36px;min-height:40px;padding:0;display:grid;place-items:center;}
+.text-fullscreen-head .dock-transport .skip-ten svg{width:28px!important;height:28px!important;flex:0 0 28px!important;display:block!important;}
+.text-fullscreen-head .dock-transport .dock-play{width:42px;height:42px;min-width:42px;min-height:42px;}
+@media(max-width:600px){
+  .text-fullscreen-head{gap:1px;padding:4px;}
+  .text-fullscreen-head button{width:31px;height:34px;min-width:31px;min-height:34px;}
+  .text-fullscreen-head .dock-play{width:37px;height:37px;min-width:37px;min-height:37px;}
+  .text-fullscreen-head .dock-transport .skip-ten{width:30px;height:34px;min-width:30px;min-height:34px;}
+  .text-fullscreen-head .dock-transport .skip-ten svg{width:26px!important;height:26px!important;flex:0 0 26px!important;}
+  .dock-divider{height:18px;margin:0 1px;}
+}
+@media(max-width:360px){
+  .text-fullscreen-head{gap:0;padding:3px;}
+  .text-fullscreen-head button{width:28px;height:32px;min-width:28px;min-height:32px;}
+  .text-fullscreen-head .dock-play{width:35px;height:35px;min-width:35px;min-height:35px;}
+  .text-fullscreen-head .dock-transport .skip-ten{width:27px;height:32px;min-width:27px;min-height:32px;}
+  .text-fullscreen-head .dock-transport .skip-ten svg{width:24px!important;height:24px!important;flex:0 0 24px!important;}
+  .dock-divider{width:1px;margin:0;}
+}
+
+/* Book-first home screen */
+body{background:var(--bg)}
+header{position:relative;max-width:1120px;margin:0 auto;border:0;background:transparent;box-shadow:none;padding:22px 24px 8px}
+.brand{font-size:18px}.sub{font-size:12px}
+.home-wrap{max-width:1000px;margin:12px auto 28px;padding:0 24px}
+.book-hero{display:grid;grid-template-columns:minmax(130px,210px) minmax(0,1fr);gap:clamp(24px,5vw,58px);align-items:center;padding:clamp(22px,4vw,48px);border:1px solid var(--line);border-radius:30px;background:linear-gradient(135deg,color-mix(in srgb,var(--panel) 96%,var(--accent)),var(--panel));box-shadow:var(--shadow);overflow:hidden;position:relative}
+.book-cover{aspect-ratio:2/3;width:100%;max-width:210px;border-radius:5px 12px 12px 5px;position:relative;overflow:hidden;box-shadow:8px 12px 28px #0003;background:linear-gradient(145deg,#e9dfc8 0%,#c7b28e 48%,#7c2f36 48%,#461d29 100%);color:#3b2930;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+.book-cover:before{content:"";position:absolute;inset:7px;border:1px solid #3b293055;border-radius:2px;pointer-events:none}
+.book-cover:after{content:"";position:absolute;width:180%;height:1px;left:-25%;top:48%;background:#3b293044;transform:rotate(-42deg)}
+.cover-kicker{font-size:8px;letter-spacing:.22em;text-transform:uppercase;z-index:1}.cover-title{font:700 clamp(23px,4vw,40px)/.9 Georgia,serif;letter-spacing:-.06em;z-index:1}.cover-author{font-size:8px;letter-spacing:.16em;text-transform:uppercase;z-index:1;color:#f1e6d3}
+.hero-copy .eyebrow{margin-bottom:12px}.hero-copy h1{font-size:clamp(34px,5vw,58px);line-height:1.02;letter-spacing:-.055em;margin:0 0 9px}.hero-author{font-size:16px;color:var(--muted);margin-bottom:24px}.hero-meta{font-size:13px;color:var(--muted);margin-bottom:22px}
+.resume-card{max-width:470px;border:1px solid var(--line);border-radius:18px;padding:16px;background:color-mix(in srgb,var(--bg) 62%,var(--panel));}
+.resume-top{display:flex;align-items:center;gap:12px}.resume-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--text);color:var(--bg);font-size:17px;flex:0 0 auto}.resume-copy{min-width:0;flex:1}.resume-title{font-weight:650;font-size:14px}.resume-detail{font-size:12px;color:var(--muted);margin-top:2px}.resume-progress{height:3px;border-radius:99px;background:var(--line);margin-top:14px;overflow:hidden}.resume-progress>span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}.resume-foot{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px;margin-top:7px}
+.home-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.home-actions button{min-height:43px;padding:10px 17px}.browse-btn{background:transparent}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:30px 2px 14px}.section-heading h2{font-size:23px;letter-spacing:-.04em;margin:0}.section-heading p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.part-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.part-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:14px;min-height:112px;padding:16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);box-shadow:none}.part-card .part-number{font-size:11px;color:var(--muted);letter-spacing:.1em}.part-card .part-name{font-size:16px;font-weight:650}.part-card .part-count{font-size:12px;color:var(--muted)}.part-card.active{border-color:var(--accent);background:var(--soft)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;max-width:1000px;margin:0 auto 30px;padding:0 24px}.panel{border-radius:22px}.player-panel{display:none}.player-active .player-panel{display:block}.player-active .home-wrap{display:none}
+.chapter-panel .list-head{padding:20px 22px;border:0}.chapter-panel .list-head h2{font-size:19px;letter-spacing:-.03em}.chapter-panel .filters{gap:8px}.chapter-panel .filter{padding:8px 13px}.chapter-panel .chapters{max-height:none;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:0 12px 12px;gap:4px}.chapter-panel .chapter{border:1px solid transparent;border-radius:13px;padding:12px;background:transparent;min-width:0}.chapter-panel .chapter:hover{background:var(--bg)}.chapter-panel .chapter.active{background:var(--soft);border-color:color-mix(in srgb,var(--accent) 20%,transparent)}.chapter-panel .chapter-file{display:none}.chapter-panel .number{border-radius:50%;width:34px;height:34px;flex-basis:34px}.chapter-panel .empty{grid-column:1/-1}
+.player-panel .now{padding:clamp(18px,3vw,30px)}.back-home{display:inline-flex;align-items:center;gap:7px;margin-bottom:18px;padding:7px 12px;background:transparent;color:var(--muted);box-shadow:none;font-size:13px}.player-panel .filename{display:none}.player-panel audio{margin:16px 0}.player-panel .keys{display:none}.footer{max-width:1000px;margin:0 auto 28px;padding:0 24px;opacity:.65}
+@media(max-width:700px){header{padding:16px 18px 6px}.home-wrap{padding:0 14px;margin-top:10px}.book-hero{grid-template-columns:94px minmax(0,1fr);gap:18px;padding:19px;border-radius:24px}.book-cover{width:94px;padding:10px}.cover-title{font-size:23px}.cover-kicker,.cover-author{font-size:6px}.hero-copy h1{font-size:34px}.hero-author{font-size:14px;margin-bottom:14px}.hero-meta{font-size:11px;margin-bottom:14px}.resume-card{padding:12px}.resume-icon{width:36px;height:36px}.resume-title{font-size:13px}.resume-detail{font-size:11px}.resume-foot{font-size:10px}.home-actions{margin-top:12px}.home-actions button{font-size:13px;padding:9px 12px;min-height:39px}.section-heading{margin-top:25px}.section-heading h2{font-size:21px}.part-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.part-card{min-height:92px;padding:13px;gap:8px}.layout{padding:0 14px;margin-top:10px}.chapter-panel .list-head{padding:16px}.chapter-panel .chapters{grid-template-columns:1fr;padding:0 8px 8px}.chapter-panel .chapter{padding:10px}.player-panel .now{padding:18px}.back-home{margin-bottom:14px}.footer{padding:0 14px}}
+@media(min-width:1000px){.home-wrap{margin-top:22px}.book-hero{min-height:350px}.part-card{min-height:125px}}
+
+
+/* Unified Now Playing: artwork and transport lead; text is an optional lyrics-like view. */
+.text-fullscreen{background:var(--bg);}
+.now-playing-view{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(112px + env(safe-area-inset-bottom,0px));overflow:auto;overscroll-behavior:contain}
+.np-topline{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:10px;letter-spacing:.16em;font-weight:700;margin:0 auto 20px}
+.np-live-dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 13%,transparent)}
+.np-main{width:min(100%,410px);display:flex;flex-direction:column;align-items:stretch;gap:0}
+.np-artwork{width:min(72vw, min(54vh, 320px));aspect-ratio:1/1;align-self:center;border-radius:7px;background:linear-gradient(145deg,#eee4d0 0%,#c9b28d 47%,#7e333d 47%,#351922 100%);box-shadow:0 20px 54px rgba(0,0,0,.20);display:flex;flex-direction:column;justify-content:space-between;padding:clamp(18px,4vw,30px);color:#38262c;position:relative;overflow:hidden;margin-bottom:clamp(24px,4vh,38px)}
+.np-artwork:before{content:"";position:absolute;inset:10px;border:1px solid #38262c55;pointer-events:none}.np-artwork:after{content:"";position:absolute;left:-20%;top:50%;width:140%;height:1px;background:#38262c40;transform:rotate(-42deg)}
+.np-art-kicker,.np-art-author{font-size:clamp(7px,1.5vw,10px);letter-spacing:.19em;font-weight:650;z-index:1}.np-art-title{font:700 clamp(48px,11vw,82px)/.78 Georgia,serif;letter-spacing:-.09em;z-index:1}.np-art-author{color:#f4e8d5}
+.np-bookline{min-width:0;margin-bottom:18px}.np-book-title{font-size:clamp(20px,5vw,25px);font-weight:700;letter-spacing:-.045em;line-height:1.15}.np-chapter-title{font-size:14px;color:var(--muted);margin-top:5px}.np-part-label{display:none}
+.np-timeline{margin-bottom:15px}.np-seek{display:block;width:100%;height:18px;margin:0;accent-color:var(--text);cursor:pointer;touch-action:pan-x}.np-times{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;margin-top:1px}
+.np-transport{display:flex;align-items:center;justify-content:space-between;gap:8px}.np-transport button{display:grid;place-items:center;border:0;box-shadow:none;background:transparent;min-width:38px;min-height:42px;padding:0;color:var(--text);font-size:22px}.np-transport button:hover{background:var(--soft)}.np-transport .np-play{width:58px;height:58px;min-width:58px;min-height:58px;border-radius:50%;background:var(--text);color:var(--bg);font-size:24px}.np-transport .np-play:hover{background:var(--accent);color:#fff}.np-transport small{font-size:8px;font-weight:700;margin-left:-3px}.text-fullscreen.mode-player .reading-topline{display:none}.text-fullscreen.mode-player .now-playing-view{display:flex}.text-fullscreen.mode-player .reader,.text-fullscreen.mode-player #rsvpView{display:none!important}.text-fullscreen.mode-player .dock-transport,.text-fullscreen.mode-player .dock-transport-divider{display:none}
+.text-fullscreen.mode-guided .now-playing-view,.text-fullscreen.mode-rsvp .now-playing-view{display:none}.text-fullscreen.mode-guided .reader{display:block}.text-fullscreen.mode-rsvp #rsvpView{display:flex}
+.text-fullscreen-head{gap:3px;padding:6px}.text-fullscreen-head button{width:42px;height:42px;min-width:42px;min-height:42px;font-size:17px}.text-fullscreen-head .dock-play{width:44px;height:44px;min-width:44px;min-height:44px}.text-fullscreen-head .active{background:var(--soft);color:var(--accent)}
+@media(max-width:600px){.now-playing-view{padding:calc(18px + env(safe-area-inset-top,0px)) 24px calc(100px + env(safe-area-inset-bottom,0px))}.np-topline{margin-bottom:15px}.np-artwork{width:min(70vw, 34vh, 280px);margin-bottom:clamp(22px,4vh,30px)}.np-book-title{font-size:22px}.np-transport .np-play{width:54px;height:54px;min-width:54px;min-height:54px}.text-fullscreen-head{gap:1px;padding:5px}.text-fullscreen-head button{width:36px;height:36px;min-width:36px;min-height:36px;font-size:15px}.text-fullscreen-head .dock-play{width:40px;height:40px;min-width:40px;min-height:40px}}
+@media(max-height:650px){.np-topline{margin-bottom:10px}.np-artwork{width:min(38vh,230px);margin-bottom:16px}.np-bookline{margin-bottom:10px}.np-timeline{margin-bottom:8px}.np-transport .np-play{width:48px;height:48px;min-width:48px;min-height:48px}}
+@media(prefers-reduced-motion:reduce){.text-fullscreen-head,.np-transport button{transition:none!important}}
+
+.text-fullscreen-head button svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.np-transport button svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.np-transport button.skip-ten svg{width:32px;height:28px;stroke-width:1.7}.np-transport button.skip-ten text{font:700 9px -apple-system,BlinkMacSystemFont,sans-serif;fill:currentColor;stroke:none}
+.np-seek{appearance:none;-webkit-appearance:none;background:transparent;outline:none}
+.np-seek::-webkit-slider-runnable-track{height:4px;border-radius:99px;background:linear-gradient(to right,var(--text) 0%,var(--text) var(--seek-progress,0%),var(--line) var(--seek-progress,0%),var(--line) 100%)}
+.np-seek::-moz-range-track{height:4px;border-radius:99px;background:var(--line)}.np-seek::-moz-range-progress{height:4px;border-radius:99px;background:var(--text)}
+.np-seek::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;margin-top:-4px;border-radius:50%;background:var(--text);border:0;box-shadow:0 1px 4px #0002}
+.np-seek::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:var(--text)}
+.np-transport button:focus-visible,.text-fullscreen-head button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-height:560px){.np-main{width:min(100%,600px);display:grid;grid-template-columns:minmax(110px,32%) minmax(0,1fr);column-gap:22px;align-items:center}.np-artwork{grid-row:1/5;grid-column:1;width:min(32vw,45vh,210px);margin:0}.np-bookline,.np-timeline,.np-transport{grid-column:2}.np-bookline{align-self:end}.np-timeline{align-self:center}.np-transport{align-self:start}.np-topline{margin-bottom:10px}}
+
+/* Full-screen app shell: the library is a full-height first screen, not a webpage card. */
+html,body{width:100%;height:100%;min-height:100%;overflow:hidden}
+body{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column}
+body>header{position:relative;top:auto;flex:0 0 auto;min-height:62px;padding-left:clamp(18px,4vw,52px);padding-right:clamp(18px,4vw,52px)}
+.home-wrap{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;max-width:1320px;width:100%;margin:0 auto;padding:clamp(14px,2.6vh,28px) clamp(18px,4vw,52px) 24px}
+.book-hero{min-height:clamp(230px,42vh,370px);grid-template-columns:minmax(130px,clamp(145px,18vw,220px)) minmax(0,1fr);gap:clamp(24px,5vw,72px);padding:clamp(20px,3.5vw,48px)}
+.book-cover{max-height:min(31vh,310px);justify-self:center}
+.hero-author{margin-bottom:clamp(12px,2vh,24px)}.hero-meta{margin-bottom:clamp(12px,2vh,22px)}
+.section-heading{margin-top:clamp(16px,2.7vh,28px);margin-bottom:12px}.part-grid{gap:clamp(8px,1.2vw,14px)}.part-card{min-height:clamp(82px,13vh,122px)}
+.footer{display:none!important}
+#mainLayout{display:none}.player-active .home-wrap{display:none}.player-active #mainLayout{display:block;flex:1;min-height:0;overflow:auto;width:100%;max-width:1100px;margin:0 auto;padding:18px clamp(14px,3vw,32px)}
+.icon-button svg,.resume-icon svg,.home-actions svg,.section-heading svg,.back-home svg{width:19px;height:19px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.resume-icon svg{width:20px;height:20px;fill:currentColor;stroke:none}.icon-button{display:grid;place-items:center;width:42px;height:42px;min-width:42px;padding:0}.icon-button svg path:first-child{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.seek-btn svg,.skip-ten svg{width:32px;height:32px;display:block;flex:0 0 32px;overflow:visible}.seek-btn svg path,.skip-ten svg path{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.seek-btn svg text,.skip-ten svg text{font:700 9px -apple-system,BlinkMacSystemFont,sans-serif;fill:currentColor;stroke:none}
+#themeBtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.home-actions button{display:inline-flex;align-items:center;justify-content:center;gap:9px}.section-heading>button{display:inline-flex;align-items:center;gap:7px}.resume-top>.primary svg{width:19px;height:19px;fill:currentColor;stroke:none}.icon-button svg.play-glyph,.icon-button svg.play-glyph path{fill:currentColor;stroke:none}
+.np-transport button svg,.text-fullscreen-head button svg{width:20px;height:20px;display:block;flex:0 0 auto;overflow:visible}.np-transport button.skip-ten svg,.text-fullscreen-head button.skip-ten svg{width:32px;height:32px;display:block;flex:0 0 32px}.np-transport button svg path,.text-fullscreen-head button#settingsBtn svg path{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.text-fullscreen-head button#settingsBtn svg{width:20px;height:20px;display:block;flex:0 0 20px}.np-transport .np-play svg,.dock-play svg{width:23px;height:23px;fill:currentColor;stroke:none}.np-transport .np-play svg path,.dock-play svg path{fill:currentColor;stroke:none}
+@media(max-width:700px){body>header{min-height:56px;padding:10px 16px}.home-wrap{padding:12px 14px 18px}.book-hero{min-height:0;grid-template-columns:86px minmax(0,1fr);gap:16px;padding:16px}.book-cover{width:86px;max-height:190px;padding:9px}.cover-title{font-size:23px}.hero-copy h1{font-size:clamp(28px,8vw,38px)}.hero-author{margin-bottom:10px}.hero-meta{font-size:11px;margin-bottom:12px}.resume-card{padding:10px}.resume-icon{width:34px;height:34px}.resume-top{gap:9px}.resume-top>.primary{width:38px;height:38px;min-width:38px}.section-heading{margin-top:18px}.section-heading h2{font-size:19px}.section-heading p{font-size:12px}.part-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.part-card{min-height:80px;padding:11px;gap:5px}.part-card .part-name{font-size:14px}.part-card .part-count{font-size:11px}.home-actions{margin-top:10px}.home-actions button{min-height:36px;padding:7px 11px;font-size:12px}}
+@media(max-height:720px) and (min-width:701px){.book-hero{min-height:220px;padding:22px}.book-cover{max-height:230px}.section-heading{margin-top:14px}.part-card{min-height:78px;padding:12px;gap:6px}.home-wrap{padding-top:12px}}
+
+
+/* Icon corrections v4: horizontal, upper-arc arrowheads and truly centered settings control. */
+.skip-ten svg{width:32px!important;height:32px!important;display:block!important;flex:0 0 32px!important;overflow:visible!important;align-self:center!important;transform:none!important}
+.skip-ten svg text{font-size:9px;dominant-baseline:alphabetic}
+.text-fullscreen-head #settingsBtn{display:grid!important;place-items:center!important;align-self:center!important;position:relative!important;top:0!important;transform:none!important;padding:0!important;line-height:0!important}
+.text-fullscreen-head #settingsBtn svg{width:20px!important;height:20px!important;display:block!important;flex:none!important;margin:0!important;align-self:center!important;justify-self:center!important;transform:none!important;overflow:visible}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">The Idiot</div><div class="sub">Audiobook · Read along</div></div>
+  <button id="themeBtn" type="button" aria-label="Toggle dark mode" title="Appearance"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.4 8.4 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"/></svg></button>
+</header>
+<section class="home-wrap" id="homeScreen">
+  <div class="book-hero">
+    <div class="book-cover" aria-label="Decorative cover for The Idiot"><div class="cover-kicker">A novel</div><div class="cover-title">The<br>Idiot</div><div class="cover-author">Fyodor Dostoevsky</div></div>
+    <div class="hero-copy">
+      <div class="eyebrow">Your audiobook</div>
+      <h1>The Idiot</h1>
+      <div class="hero-author">Fyodor Dostoevsky</div>
+      <div class="hero-meta">50 chapters <span aria-hidden="true">·</span> Audiobook and synchronized read-along</div>
+      <div class="resume-card">
+        <div class="resume-top"><div class="resume-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></div><div class="resume-copy"><div class="resume-title" id="resumeLabel">Continue listening</div><div class="resume-detail" id="resumeDetail">Part I · Chapter 01</div></div><button id="resumeBtn" class="primary icon-button" type="button" aria-label="Continue listening" title="Continue listening"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button></div>
+        <div class="resume-progress"><span id="resumeProgress"></span></div><div class="resume-foot"><span id="resumePosition">Ready when you are</span><span id="resumePercent">0%</span></div>
+      </div>
+      <div class="home-actions"><button id="browseBtn" class="browse-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><path d="M8 4v4M15 10v4M10 16v4"/></svg> Browse chapters</button></div>
+    </div>
+  </div>
+  <div class="section-heading"><div><h2>Explore the book</h2><p>Pick up where you left off or choose a part.</p></div><button id="allChaptersBtn" type="button" class="browse-btn">All chapters <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></button></div>
+  <div class="part-grid" id="partCards">
+    <button type="button" class="part-card" data-part="1"><span class="part-number">PART I</span><span class="part-name">The beginning</span><span class="part-count">16 chapters</span></button>
+    <button type="button" class="part-card" data-part="2"><span class="part-number">PART II</span><span class="part-name">The return</span><span class="part-count">12 chapters</span></button>
+    <button type="button" class="part-card" data-part="3"><span class="part-number">PART III</span><span class="part-name">The turning point</span><span class="part-count">10 chapters</span></button>
+    <button type="button" class="part-card" data-part="4"><span class="part-number">PART IV</span><span class="part-name">The conclusion</span><span class="part-count">12 chapters</span></button>
+  </div>
+</section>
+<main class="layout" id="mainLayout">
+  <section class="panel player-panel" id="playerPanel">
+    <div class="now">
+      <button id="homeBtn" type="button" class="back-home" aria-label="Back to book home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span>Library</span></button>
+      <div class="eyebrow" id="partLabel">PART I</div>
+      <h1 class="chapter-title" id="chapterTitle">Chapter 01</h1>
+      <div class="filename" id="fileLabel">Part_I_Chapter_01.mp3</div>
+      <audio id="audio" controls preload="metadata"></audio>
+      <div class="controls">
+        <button id="prevBtn" type="button" class="icon-button" aria-label="Previous chapter" title="Previous chapter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button id="back10Btn" type="button" class="seek-btn icon-button" aria-label="Back 10 seconds" title="Back 10 seconds"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M8.5 7.5A11 11 0 1 1 5.2 16.8"/><path d="M8.5 7.5H4.2M8.5 7.5 7.1 3.4"/><text x="17" y="19" text-anchor="middle">10</text></svg></button>
+        <button id="playBtn" class="primary icon-button" type="button" aria-label="Play or pause" title="Play or pause"><svg class="play-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+        <button id="forward10Btn" type="button" class="seek-btn icon-button" aria-label="Forward 10 seconds" title="Forward 10 seconds"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M23.5 7.5A11 11 0 1 0 26.8 16.8"/><path d="M23.5 7.5h4.3M23.5 7.5l1.4-4.1"/><text x="15" y="19" text-anchor="middle">10</text></svg></button>
+        <button id="nextBtn" type="button" class="icon-button" aria-label="Next chapter" title="Next chapter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        <button id="restartBtn" class="icon-button" type="button" aria-label="Restart chapter" title="Restart chapter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.6 6.4M3 4v7h7"/></svg></button>
+        <label class="sub" for="playbackRate" title="Playback speed">×</label><button id="slowerBtn" type="button" aria-label="Decrease playback speed">−</button><select id="playbackRate" class="speed-select" aria-label="Audio playback speed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option><option value="2.5">2.5×</option><option value="3">3×</option></select><button id="fasterBtn" type="button" aria-label="Increase playback speed">+</button>
+      </div>
+      <div class="progressline"><span id="timeCurrent">0:00</span><span id="timeDuration">0:00</span></div>
+      <div class="status" id="status">Checking which audio files are available…</div>
+      <div class="keys"><span><kbd>Space</kbd> Play/pause</span><span><kbd>←</kbd> Previous chapter</span><span><kbd>→</kbd> Next chapter</span><span><kbd>Esc</kbd> Close full-screen text</span></div>
+      <div class="reader-head"><div><div class="eyebrow">Read along</div><div class="reader-note" id="readerNote">Preparing chapter text…</div></div><div class="reader-actions"><button id="followBtn" type="button" class="filter active" aria-label="Toggle follow audio" title="Toggle follow audio">◎</button><button id="fullTextBtn" type="button" aria-label="Open full-screen text" title="Full-screen text">⛶</button></div></div>
+      <div id="reader" class="reader" aria-live="off">Chapter text and word timing files will appear here after you run <code>prepare_readalong.py</code>.</div>
+    </div>
+  </section>
+  <aside class="panel chapter-panel" id="chapterPanel">
+    <div class="list-head">
+      <h2>Chapters <span id="count" class="sub"></span></h2>
+      <input id="search" class="search" type="search" placeholder="Find a chapter…" aria-label="Find a chapter">
+      <div class="filters" id="filters">
+        <button class="filter" data-part="all">All</button>
+        <button class="filter active" data-part="1">Part I</button>
+        <button class="filter" data-part="2">Part II</button>
+        <button class="filter" data-part="3">Part III</button>
+        <button class="filter" data-part="4">Part IV</button>
+      </div>
+    </div>
+    <div id="chapters" class="chapters"></div>
+  </aside>
+</main>
+<div id="textFullscreen" class="text-fullscreen" role="dialog" aria-modal="true" aria-label="Audiobook player">
+  <div class="reading-topline"><span id="fullChapterLabel">THE IDIOT</span><span class="reading-part">READ ALONG</span></div>
+  <section id="nowPlayingView" class="now-playing-view" aria-label="Now playing">
+    <div class="np-topline"><span class="np-live-dot" aria-hidden="true"></span><span>NOW PLAYING</span></div>
+    <div class="np-main">
+      <div class="np-artwork" aria-label="The Idiot audiobook cover" role="img">
+        <div class="np-art-kicker">A NOVEL</div><div class="np-art-title">THE<br>IDIOT</div><div class="np-art-author">FYODOR DOSTOEVSKY</div>
+      </div>
+      <div class="np-bookline"><div class="np-book-title">The Idiot</div><div id="npChapterTitle" class="np-chapter-title">Chapter 01</div><div id="npPartLabel" class="np-part-label">Part I</div></div>
+      <div class="np-timeline">
+        <input id="fullSeek" class="np-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek through chapter">
+        <div class="np-times"><span id="npTimeCurrent">0:00</span><span id="npTimeDuration">0:00</span></div>
+      </div>
+      <div class="np-transport" aria-label="Playback controls">
+        <button id="fullPrevBtn" class="np-secondary" type="button" aria-label="Previous chapter" title="Previous chapter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6l-10 6 10 6z"/></svg></button>
+        <button id="npBack10Btn" class="np-secondary skip-ten" type="button" aria-label="Back 10 seconds" title="Back 10 seconds"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M8.5 7.5A11 11 0 1 1 5.2 16.8"/><path d="M8.5 7.5H4.2M8.5 7.5 7.1 3.4"/><text x="17" y="19" text-anchor="middle">10</text></svg></button>
+        <button id="npPlayBtn" class="np-play" type="button" aria-label="Play audiobook" title="Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+        <button id="npForward10Btn" class="np-secondary skip-ten" type="button" aria-label="Forward 10 seconds" title="Forward 10 seconds"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M23.5 7.5A11 11 0 1 0 26.8 16.8"/><path d="M23.5 7.5h4.3M23.5 7.5l1.4-4.1"/><text x="15" y="19" text-anchor="middle">10</text></svg></button>
+        <button id="fullNextBtn" class="np-secondary" type="button" aria-label="Next chapter" title="Next chapter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5v14M5 6l9 6-9 6z"/></svg></button>
+      </div>
+    </div>
+  </section>
+  <div class="text-fullscreen-head" aria-label="Player and reading options">
+    <button id="nowPlayingBtn" type="button" class="active" aria-pressed="true" aria-label="Now playing" title="Now playing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
+    <button id="guidedModeBtn" type="button" aria-pressed="false" aria-label="Synchronized text" title="Synchronized text"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4z"/><path d="M7 9h10M7 12h7M7 15h9"/></svg></button>
+    <button id="rsvpModeBtn" type="button" aria-pressed="false" aria-label="RSVP word mode" title="RSVP word mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3.2-6 9-6 9 6 9 6-3.2 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></button>
+    <span class="dock-divider dock-transport-divider" aria-hidden="true"></span>
+    <div class="dock-transport" aria-label="Playback controls">
+      <button id="back10FullBtn" type="button" class="skip-ten" aria-label="Back 10 seconds" title="Back 10 seconds"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M8.5 7.5A11 11 0 1 1 5.2 16.8"/><path d="M8.5 7.5H4.2M8.5 7.5 7.1 3.4"/><text x="17" y="19" text-anchor="middle">10</text></svg></button>
+      <button id="fullPlayBtn" type="button" class="dock-play" aria-label="Play or pause audiobook" title="Play or pause"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+      <button id="forward10FullBtn" type="button" class="skip-ten" aria-label="Forward 10 seconds" title="Forward 10 seconds"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M23.5 7.5A11 11 0 1 0 26.8 16.8"/><path d="M23.5 7.5h4.3M23.5 7.5l1.4-4.1"/><text x="15" y="19" text-anchor="middle">10</text></svg></button>
+    </div>
+    <span class="dock-divider" aria-hidden="true"></span>
+    <button id="settingsBtn" type="button" aria-label="Playback settings" title="Playback settings"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z"/><path d="m19.4 15 .06.06a1.7 1.7 0 0 1-2.4 2.4l-.06-.06a1.7 1.7 0 0 0-2.9 1.2v.1a1.7 1.7 0 0 1-3.4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.06.06a1.7 1.7 0 0 1-2.4-2.4l.06-.06a1.7 1.7 0 0 0-1.2-2.9h-.1a1.7 1.7 0 0 1 0-3.4h.1a1.7 1.7 0 0 0 1.2-2.9l-.06-.06a1.7 1.7 0 0 1 2.4-2.4l.06.06a1.7 1.7 0 0 0 2.9-1.2v-.1a1.7 1.7 0 0 1 3.4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.06-.06a1.7 1.7 0 0 1 2.4 2.4l-.06.06a1.7 1.7 0 0 0 1.2 2.9h.1a1.7 1.7 0 0 1 0 3.4h-.1a1.7 1.7 0 0 0-1.2 2.9Z"/></svg></button>
+    <button id="closeFullTextBtn" type="button" aria-label="Minimize player" title="Minimize player"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+  </div>
+  <div id="settingsSheet" class="settings-sheet" hidden>
+    <div class="settings-title">Playback settings</div>
+    <div class="settings-row"><span>Playback speed</span><div class="fullscreen-speed"><button id="fullSlowerBtn" type="button" aria-label="Decrease playback speed" title="Decrease speed">−</button><span id="fullSpeedReadout" class="speed-readout">1×</span><button id="fullFasterBtn" type="button" aria-label="Increase playback speed" title="Increase speed">+</button></div></div>
+    <button id="functionWordsBtn" type="button" class="settings-toggle" aria-label="Show function words in RSVP" title="Show function words" aria-pressed="false"><span>Show function words in RSVP</span><span class="toggle-track"><span class="toggle-knob"></span></span></button>
+  </div>
+  <div id="rsvpView" class="rsvp-view" hidden aria-live="off"><div id="rsvpWord" class="rsvp-word"></div></div>
+</div>
+<div class="footer">A quiet place to listen, read, and pick up where you left off.</div>
+<script>
+(() => {
+  const chapters = [];
+  const counts = [0,16,12,10,12];
+  for (let part=1; part<=4; part++) {
+    for (let ch=1; ch<=counts[part]; ch++) {
+      const p = String(part).padStart(2,'0');
+      const c = String(ch).padStart(2,'0');
+      chapters.push({part, ch, file:`Part_${['','I','II','III','IV'][part]}_Chapter_${c}.mp3`, src:`./build/audio_in/merged_chapters/Part_${['','I','II','III','IV'][part]}_Chapter_${c}.mp3`, available:null});
+    }
+  }
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY='dostoevsky-reader-state-v1';
+  function readSavedState(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')||{};}catch(e){return {};}}
+  const savedState=readSavedState();
+  const audio=$('audio'), list=$('chapters');
+  const reader=$('reader'), readerHome=reader.parentNode, readerAnchor=reader.nextSibling;
+  let textFullscreen=false, fullscreenMode=['player','guided','rsvp'].includes(savedState.fullscreenMode)?savedState.fullscreenMode:'player';
+  let current=Number.isInteger(savedState.chapterIndex)?Math.max(0,Math.min(49,savedState.chapterIndex)):0, filterPart=savedState.filterPart||'1', wordRecords=[], followAudio=savedState.followAudio!==false, lastWord=-1;
+  let rsvpIndex=-1, rsvpTimer=null, fullscreenRequested=false, showFunctionWords=savedState.showFunctionWords===true, controlsHideTimer=null;
+  let pendingRestoreTime=Number(savedState.currentTime)||0, initialRestorePending=true, lastProgressSave=0;
+  function saveState(force=false){
+    const now=Date.now(); if(!force && now-lastProgressSave<1800)return; lastProgressSave=now;
+    const actualTime=Number.isFinite(audio.currentTime)?audio.currentTime:0;
+    const storedTime=(pendingRestoreTime>0 && actualTime<0.25)?pendingRestoreTime:actualTime;
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify({chapterIndex:current,currentTime:storedTime,playbackRate:audio.playbackRate||Number(savedState.playbackRate)||1,theme:document.documentElement.dataset.theme||'light',showFunctionWords,followAudio,fullscreenMode,filterPart,updatedAt:now}));}catch(e){}
+  }
+  function showPlayer(play=false){document.body.classList.add('player-active');if(play){openFullText('player',true);return;} $('playerPanel').scrollIntoView({behavior:'smooth',block:'start'});}
+  function updateResumeCard(){
+    const c=chapters[current]; if(!c)return;
+    $('resumeDetail').textContent=`Part ${roman[c.part]} · Chapter ${String(c.ch).padStart(2,'0')}`;
+    const duration=Number.isFinite(audio.duration)?audio.duration:0, time=Number.isFinite(audio.currentTime)?audio.currentTime:0;
+    const pct=duration>0?Math.max(0,Math.min(100,time/duration*100)):0;
+    $('resumeProgress').style.width=`${pct}%`; $('resumePercent').textContent=duration?`${Math.round(pct)}% of chapter`:'Not started';
+    $('resumePosition').textContent=time>0?`${fmt(time)}${duration?` of ${fmt(duration)}`:''}`:'Ready when you are';
+    $('resumeLabel').textContent=time>0?'Continue listening':'Start listening';
+  }
+  const playbackRates=[0.5,0.75,1,1.25,1.5,1.75,2,2.5,3];
+  // RSVP can omit common function words; the full synchronized text still contains every word.
+  const rsvpFunctionWords = new Set((
+    "a an the this that these those some any each every either neither much many more most few less least " +
+    "of at by for from in into on onto to with within without about above across after against along among around " +
+    "before behind below beneath beside between beyond during except inside near off out outside over per through " +
+    "toward under underneath until up upon via as and but or nor so yet if unless while although though because " +
+    "since than whether who whom whose which what where when why how I me my mine we us our ours you your yours " +
+    "he him his she her hers it its they them their theirs am is are was were be been being do does did have has had " +
+    "can could may might must shall should will would just very also only even still already again not no yes"
+  ).toLowerCase().split(/\s+/));
+  function isRsvpFunctionWord(index) {
+    if(showFunctionWords) return false;
+    const raw = wordRecords[index]?.el?.textContent || '';
+    const normalized = raw.toLowerCase().replace(/[’‘]/g, "'").replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, '');
+    return !normalized || rsvpFunctionWords.has(normalized);
+  }
+  function nextRsvpContentIndex(afterIndex) {
+    for (let i = afterIndex + 1; i < wordRecords.length; i++) if (!isRsvpFunctionWord(i)) return i;
+    return -1;
+  }
+  function contentWordAtTime(time) {
+    let i = findWordAtTime(time);
+    while (i >= 0 && isRsvpFunctionWord(i)) i--;
+    if (i >= 0) return i;
+    for (let j = 0; j < wordRecords.length; j++) if (!isRsvpFunctionWord(j)) return j;
+    return Math.max(0, findWordAtTime(time));
+  }
+  const roman={1:'I',2:'II',3:'III',4:'IV'};
+  const fmt=t => { if (!Number.isFinite(t)||t<0) return '0:00'; const s=Math.floor(t); return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; };
+  function setStatus(message, kind='') { $('status').textContent=message; $('status').className='status '+kind; }
+  function filtered() {
+    const q=$('search').value.trim().toLowerCase();
+    return chapters.map((c,i)=>({...c,i})).filter(c=>(filterPart==='all'||String(c.part)===filterPart)&&(!q||c.file.toLowerCase().includes(q)||`part ${roman[c.part]} chapter ${c.ch}`.includes(q)||`chapter ${String(c.ch).padStart(2,'0')}`.includes(q)));
+  }
+  function renderList() {
+    list.innerHTML='';
+    const rows=filtered();
+    $('count').textContent=`(${rows.length})`;
+    if(!rows.length){list.innerHTML='<div class="empty">No chapters match that search.</div>';return;}
+    for(const c of rows){
+      const b=document.createElement('button'); b.type='button'; b.className='chapter'+(c.i===current?' active':'');
+      b.innerHTML=`<span class="number">${String(c.ch).padStart(2,'0')}</span><span class="chapter-info"><span class="chapter-name">Chapter ${String(c.ch).padStart(2,'0')}</span><br><span class="chapter-file">${c.available===true?'Ready to play':c.available===false?'Audio not found':`Part ${roman[c.part]}`}</span></span><span class="dot ${c.available?'yes':''}" title="${c.available?'File found':'File missing or not checked'}"></span>`;
+      b.addEventListener('click',()=>{showPlayer(false);load(c.i,false);openFullText('player',true);}); list.appendChild(b);
+    }
+  }
+  function normalizeWord(s) {
+    return (s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9']/g,'');
+  }
+  async function loadReader(c) {
+    const reader=$('reader');
+    reader.innerHTML='';
+    stopRsvpScheduler();
+    wordRecords=[]; lastWord=-1; rsvpIndex=-1;
+    $('readerNote').textContent='Loading chapter text and word timings…';
+    try {
+      const res=await fetch(`./readalong/${c.file.replace(/\.mp3$/i,'.json')}`,{cache:'no-store'});
+      if(!res.ok) throw new Error('timing file not found');
+      const data=await res.json();
+      const words=Array.isArray(data.words)?data.words:[];
+      if(!words.length) throw new Error('no words');
+      const frag=document.createDocumentFragment();
+      words.forEach((w,i)=>{
+        const span=document.createElement('span');
+        span.className='word';
+        span.textContent=w.text;
+        span.dataset.i=String(i);
+        frag.appendChild(span);
+        if(w.spaceAfter) { const space=document.createElement('span'); space.className='word-space'; space.textContent=w.spaceAfter; frag.appendChild(space); }
+        wordRecords.push({start:Number(w.start)||0,end:Number(w.end)||0,el:span});
+      });
+      reader.appendChild(frag);
+      $('readerNote').textContent=`${words.length.toLocaleString()} words · word timing loaded`;
+    } catch(e) {
+      $('readerNote').textContent='Word timings not generated yet';
+      reader.textContent='Run prepare_readalong.py on your Mac to download the Gutenberg text, match it to each MP3, and generate word timings. Then commit the readalong/ folder to GitHub.';
+    }
+  }
+  function setCurrentIndex(index, updateRsvp=true) {
+    if(!wordRecords.length) return;
+    index=Math.max(0,Math.min(wordRecords.length-1,index));
+    if(lastWord>=0 && wordRecords[lastWord]) wordRecords[lastWord].el.classList.remove('current');
+    lastWord=index;
+    wordRecords[index].el.classList.add('current');
+    if(updateRsvp && textFullscreen && fullscreenMode==='rsvp') {
+      $('rsvpWord').textContent=wordRecords[index].el.textContent;
+    }
+    if(followAudio && !(textFullscreen && fullscreenMode==='rsvp')) {
+      const el=wordRecords[index].el, box=$('reader');
+      if(textFullscreen) {
+        const er=el.getBoundingClientRect(), br=box.getBoundingClientRect();
+        box.scrollTop += (er.top + er.height/2) - (br.top + br.height*0.40);
+      } else {
+        const er=el.getBoundingClientRect(), br=box.getBoundingClientRect();
+        if(er.top<br.top+18) box.scrollTop-=br.top+18-er.top;
+        else if(er.bottom>br.bottom-28) box.scrollTop+=er.bottom-(br.bottom-28);
+      }
+    }
+  }
+  function findWordAtTime(t) {
+    let lo=0,hi=wordRecords.length-1,found=0;
+    while(lo<=hi){const mid=(lo+hi)>>1;if(wordRecords[mid].start<=t){found=mid;lo=mid+1;}else hi=mid-1;}
+    return Math.max(0,found);
+  }
+  function updateCurrentWord() {
+    if(!wordRecords.length) return;
+    const rsvpActive=textFullscreen && fullscreenMode==='rsvp';
+    if(!followAudio && !rsvpActive) return;
+    const found=findWordAtTime(audio.currentTime);
+    // In RSVP mode, a separate sequential scheduler displays every source word.
+    // Don't jump directly to the latest timeupdate word, which can skip short words.
+    if(rsvpActive) {
+      if(rsvpIndex<0) { rsvpIndex=found; setCurrentIndex(rsvpIndex,true); }
+      if(!audio.paused && rsvpTimer===null) scheduleNextRsvpWord();
+      return;
+    }
+    if(found!==lastWord) setCurrentIndex(found,false);
+  }
+  function stopRsvpScheduler() {
+    if(rsvpTimer!==null) clearTimeout(rsvpTimer);
+    rsvpTimer=null;
+  }
+  function syncRsvpToAudio() {
+    if(!wordRecords.length) return;
+    // Hold the last meaningful word while function words are spoken.
+    rsvpIndex=showFunctionWords ? findWordAtTime(audio.currentTime) : contentWordAtTime(audio.currentTime);
+    setCurrentIndex(rsvpIndex,true);
+  }
+  function scheduleNextRsvpWord() {
+    stopRsvpScheduler();
+    if(!textFullscreen || fullscreenMode!=='rsvp' || audio.paused || !wordRecords.length) return;
+    if(rsvpIndex<0) syncRsvpToAudio();
+    const nextIndex=nextRsvpContentIndex(rsvpIndex);
+    if(nextIndex<0) return;
+    const currentTime=audio.currentTime;
+    const nextStart=Math.max(0,Number(wordRecords[nextIndex].start)||0);
+    const delta=nextStart-currentTime;
+    // Skip function words visually, but time each displayed word against the narration.
+    const delay=delta>0.025 ? (delta/audio.playbackRate)*1000 : 65;
+    rsvpTimer=setTimeout(()=>{
+      if(!textFullscreen || fullscreenMode!=='rsvp' || audio.paused) { rsvpTimer=null; return; }
+      // If playback was scrubbed backwards while waiting, recalculate against the new position.
+      if(audio.currentTime + 0.35 < nextStart) { scheduleNextRsvpWord(); return; }
+      rsvpIndex=nextIndex;
+      setCurrentIndex(rsvpIndex,true);
+      scheduleNextRsvpWord();
+    },Math.max(35,Math.min(delay,1500)));
+  }
+  function setPlaybackRate(rate) {
+    const nearest=playbackRates.reduce((a,b)=>Math.abs(b-rate)<Math.abs(a-rate)?b:a,playbackRates[0]);
+    audio.playbackRate=nearest;
+    $('playbackRate').value=String(nearest);
+    $('fullSpeedReadout').textContent=`${nearest}×`;
+    if(textFullscreen && fullscreenMode==='rsvp' && !audio.paused) scheduleNextRsvpWord();
+    saveState(true);
+  }
+  function changePlaybackRate(direction) {
+    let i=playbackRates.findIndex(x=>x>=audio.playbackRate-0.001);
+    if(i<0)i=playbackRates.length-1;
+    setPlaybackRate(playbackRates[Math.max(0,Math.min(playbackRates.length-1,i+direction))]);
+  }
+  async function enterAppFullscreen() {
+    if(document.fullscreenElement || !document.documentElement.requestFullscreen) return;
+    try { await document.documentElement.requestFullscreen({navigationUI:'hide'}); }
+    catch(firstError) { try { await document.documentElement.requestFullscreen(); } catch(e) {} }
+  }
+  // Request native fullscreen on the first user gesture. The CSS app shell remains full-viewport if the browser declines.
+  document.addEventListener('pointerdown', enterAppFullscreen, {capture:true, once:true});
+  document.addEventListener('keydown', enterAppFullscreen, {capture:true, once:true});
+  async function openFullText(mode='guided', autoplay=false) {
+    if(textFullscreen) { setFullscreenMode(mode); if(autoplay) audio.play().catch(()=>{}); revealControls(); return; }
+    $('textFullscreen').appendChild(reader);
+    $('textFullscreen').classList.add('open');
+    document.body.classList.add('text-open');
+    $('fullTextBtn').textContent='⛶'; $('fullTextBtn').title='Open synchronized text'; $('fullTextBtn').setAttribute('aria-label','Open synchronized text');
+    $('fullChapterLabel').textContent=`THE IDIOT · PART ${roman[chapters[current].part]} · CHAPTER ${String(chapters[current].ch).padStart(2,'0')}`;
+    textFullscreen=true; $('textFullscreen').classList.add('controls-visible'); scheduleControlsHide();
+    setFullscreenMode(mode);
+    if(autoplay) audio.play().catch(()=>setStatus('Could not start playback. Check that the MP3 exists in build/audio_in/merged_chapters/.','warn'));
+    // Fullscreen belongs to the whole app, not just the player, so changing views never exits it.
+    await enterAppFullscreen();
+    fullscreenRequested=!!document.fullscreenElement;
+    $('closeFullTextBtn').focus();
+    requestAnimationFrame(()=>{
+      if(lastWord>=0 && wordRecords[lastWord]) {
+        const el=wordRecords[lastWord].el, box=$('reader');
+        const er=el.getBoundingClientRect(), br=box.getBoundingClientRect();
+        box.scrollTop += (er.top + er.height/2) - (br.top + br.height*0.40);
+      }
+    });
+    updateCurrentWord();
+  }
+  async function closeFullText() {
+    if(!textFullscreen) return;
+    stopRsvpScheduler();
+    if(readerAnchor) readerHome.insertBefore(reader,readerAnchor); else readerHome.appendChild(reader);
+    $('reader').hidden=false;
+    $('textFullscreen').classList.remove('open','controls-visible');
+    $('settingsSheet').hidden=true;
+    if(controlsHideTimer!==null) clearTimeout(controlsHideTimer);
+    document.body.classList.remove('text-open');
+    $('fullTextBtn').textContent='⛶'; $('fullTextBtn').title='Open synchronized text'; $('fullTextBtn').setAttribute('aria-label','Open synchronized text');
+    textFullscreen=false;
+    // Deliberately keep the whole app in fullscreen when returning to the library.
+    fullscreenRequested=!!document.fullscreenElement;
+    document.body.classList.remove('player-active');
+    updateResumeCard();
+    $('resumeBtn').focus();
+  }
+  function setFullscreenMode(mode) {
+    fullscreenMode=mode;
+    saveState(true);
+    if(!['player','guided','rsvp'].includes(mode)) mode='player';
+    fullscreenMode=mode;
+    $('textFullscreen').classList.toggle('mode-player',mode==='player');
+    $('textFullscreen').classList.toggle('mode-guided',mode==='guided');
+    $('textFullscreen').classList.toggle('mode-rsvp',mode==='rsvp');
+    const rsvp=mode==='rsvp';
+    $('settingsSheet').hidden=true;
+    $('nowPlayingView').hidden=mode!=='player';
+    $('reader').hidden=mode!=='guided';
+    $('rsvpView').hidden=!rsvp;
+    $('nowPlayingBtn').classList.toggle('active',mode==='player');
+    $('guidedModeBtn').classList.toggle('active',mode==='guided');
+    $('rsvpModeBtn').classList.toggle('active',rsvp);
+    $('nowPlayingBtn').setAttribute('aria-pressed',String(mode==='player'));
+    $('guidedModeBtn').setAttribute('aria-pressed',String(mode==='guided'));
+    $('rsvpModeBtn').setAttribute('aria-pressed',String(rsvp));
+    $('functionWordsBtn').setAttribute('aria-pressed',String(showFunctionWords));
+    $('functionWordsBtn').setAttribute('aria-label',showFunctionWords?'Hide function words in RSVP':'Show function words in RSVP');
+    $('functionWordsBtn').title=showFunctionWords?'Hide function words':'Show function words';
+    stopRsvpScheduler();
+    if(rsvp) {
+      syncRsvpToAudio();
+      if(!audio.paused) scheduleNextRsvpWord();
+    } else if(followAudio) {
+      updateCurrentWord();
+      if(mode==='guided' && lastWord>=0 && wordRecords[lastWord]) {
+        const el=wordRecords[lastWord].el, box=$('reader');
+        requestAnimationFrame(()=>{const er=el.getBoundingClientRect(),br=box.getBoundingClientRect();box.scrollTop+=(er.top+er.height/2)-(br.top+br.height*.40);});
+      }
+    }
+  }
+  $('nowPlayingBtn').addEventListener('click',()=>setFullscreenMode('player'));
+  $('guidedModeBtn').addEventListener('click',()=>setFullscreenMode('guided'));
+  $('rsvpModeBtn').addEventListener('click',()=>setFullscreenMode('rsvp'));
+  $('functionWordsBtn').addEventListener('click',()=>{
+    showFunctionWords=!showFunctionWords;
+    saveState(true);
+    $('functionWordsBtn').setAttribute('aria-pressed',String(showFunctionWords));
+    $('functionWordsBtn').setAttribute('aria-label',showFunctionWords?'Hide function words in RSVP':'Show function words in RSVP');
+    $('functionWordsBtn').title=showFunctionWords?'Hide function words':'Show function words';
+    if(textFullscreen && fullscreenMode==='rsvp'){stopRsvpScheduler();syncRsvpToAudio();if(!audio.paused)scheduleNextRsvpWord();}
+  });
+  $('fullPlayBtn').addEventListener('click',()=>{if(audio.paused)audio.play().catch(()=>{});else audio.pause();});
+  $('npPlayBtn').addEventListener('click',()=>{if(audio.paused)audio.play().catch(()=>{});else audio.pause();});
+  $('fullPrevBtn').addEventListener('click',()=>load(Math.max(0,current-1),true));
+  $('fullNextBtn').addEventListener('click',()=>load(Math.min(chapters.length-1,current+1),true));
+  $('npBack10Btn').addEventListener('click',()=>{audio.currentTime=Math.max(0,audio.currentTime-10);});
+  $('npForward10Btn').addEventListener('click',()=>{audio.currentTime=Math.min(Number.isFinite(audio.duration)?audio.duration:Infinity,audio.currentTime+10);});
+  $('fullSeek').addEventListener('input',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){audio.currentTime=(Number($('fullSeek').value)/1000)*audio.duration;}});
+  $('back10FullBtn').addEventListener('click',()=>{audio.currentTime=Math.max(0,audio.currentTime-10);});
+  $('forward10FullBtn').addEventListener('click',()=>{audio.currentTime=Math.min(Number.isFinite(audio.duration)?audio.duration:Infinity,audio.currentTime+10);});
+  $('settingsBtn').addEventListener('click',()=>{ $('settingsSheet').hidden=!$('settingsSheet').hidden; revealControls(); });
+  function revealControls(){ $('textFullscreen').classList.add('controls-visible'); if(controlsHideTimer!==null)clearTimeout(controlsHideTimer); scheduleControlsHide(); }
+  function scheduleControlsHide(){ if(controlsHideTimer!==null)clearTimeout(controlsHideTimer); controlsHideTimer=setTimeout(()=>{ if(textFullscreen && !$('settingsSheet').matches(':hover') && ! $('settingsSheet').contains(document.activeElement)) { $('textFullscreen').classList.remove('controls-visible'); $('settingsSheet').hidden=true; } },3500); }
+  $('textFullscreen').addEventListener('pointerdown',e=>{ if(e.target.closest('.text-fullscreen-head,.settings-sheet')){ revealControls(); return; } if(!$('textFullscreen').classList.contains('controls-visible')) revealControls(); else scheduleControlsHide(); });
+  $('settingsSheet').addEventListener('pointerdown',()=>{ if(controlsHideTimer!==null)clearTimeout(controlsHideTimer); });
+  $('settingsSheet').addEventListener('focusout',()=>scheduleControlsHide());
+  $('slowerBtn').addEventListener('click',()=>changePlaybackRate(-1));
+  $('fasterBtn').addEventListener('click',()=>changePlaybackRate(1));
+  $('fullSlowerBtn').addEventListener('click',()=>changePlaybackRate(-1));
+  $('fullFasterBtn').addEventListener('click',()=>changePlaybackRate(1));
+  $('playbackRate').addEventListener('change',()=>setPlaybackRate(Number($('playbackRate').value)));
+  $('fullTextBtn').addEventListener('click',()=>openFullText('guided',false));
+  $('closeFullTextBtn').addEventListener('click',closeFullText);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&textFullscreen){e.preventDefault();revealControls();}});
+  document.addEventListener('fullscreenchange',()=>{fullscreenRequested=!!document.fullscreenElement;});
+  $('followBtn').addEventListener('click',()=>{
+    followAudio=!followAudio;
+    $('followBtn').textContent=followAudio?'◎':'○'; $('followBtn').title=followAudio?'Follow audio is on':'Follow audio is off'; $('followBtn').setAttribute('aria-pressed',String(followAudio));
+    $('followBtn').classList.toggle('active',followAudio);
+    saveState(true);
+    if(followAudio) updateCurrentWord();
+  });
+  function load(index, autoplay=false) {
+    const requested=Math.max(0,Math.min(chapters.length-1,index));
+    if(initialRestorePending){pendingRestoreTime=(requested===current)?pendingRestoreTime:0;initialRestorePending=false;}else pendingRestoreTime=0;
+    current=requested;
+    const c=chapters[current];
+    $('partLabel').textContent=`PART ${roman[c.part]}`;
+    $('chapterTitle').textContent=`Chapter ${String(c.ch).padStart(2,'0')}`;
+    $('fullChapterLabel').textContent=`THE IDIOT · PART ${roman[c.part]} · CHAPTER ${String(c.ch).padStart(2,'0')}`;
+    $('npChapterTitle').textContent=`Chapter ${String(c.ch).padStart(2,'0')}`;$('npPartLabel').textContent=`Part ${roman[c.part]}`;
+    $('fileLabel').textContent=c.file;
+    audio.src=c.src; audio.load();
+    loadReader(c);
+    updateResumeCard(); saveState(true);
+    $('playBtn').innerHTML='<svg class="play-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+    renderList();
+    setStatus(c.available===false?'Audio file not found. Check that it exists in build/audio_in/merged_chapters/.':c.available===true?'Ready to play.':'Trying to load audio…',c.available===false?'warn':'');
+    if(autoplay) audio.play().catch(()=>setStatus('Could not start playback. Check that the MP3 exists in audio_in/.','warn'));
+  }
+  $('prevBtn').addEventListener('click',()=>{load(current-1,false);openFullText('player',true);});
+  $('nextBtn').addEventListener('click',()=>{load(current+1,false);openFullText('player',true);});
+  $('playBtn').addEventListener('click',()=>openFullText('player',audio.paused));
+  $('back10Btn')?.addEventListener('click',()=>{audio.currentTime=Math.max(0,audio.currentTime-10);});
+  $('forward10Btn')?.addEventListener('click',()=>{audio.currentTime=Math.min(Number.isFinite(audio.duration)?audio.duration:Infinity,audio.currentTime+10);});
+  $('restartBtn').addEventListener('click',()=>{audio.currentTime=0;audio.play().catch(()=>{});});
+  audio.addEventListener('play',()=>{$('playBtn').innerHTML='<svg class="play-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg>';$('fullPlayBtn').innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg>';$('fullPlayBtn').setAttribute('aria-label','Pause audiobook');$('fullPlayBtn').title='Pause';$('npPlayBtn').innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg>';$('npPlayBtn').setAttribute('aria-label','Pause audiobook');$('npPlayBtn').title='Pause';if(textFullscreen&&fullscreenMode==='rsvp')scheduleNextRsvpWord();saveState(true);});
+  audio.addEventListener('pause',()=>{$('playBtn').innerHTML='<svg class="play-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';$('fullPlayBtn').innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';$('fullPlayBtn').setAttribute('aria-label','Play audiobook');$('fullPlayBtn').title='Play';$('npPlayBtn').innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';$('npPlayBtn').setAttribute('aria-label','Play audiobook');$('npPlayBtn').title='Play';stopRsvpScheduler();saveState(true);updateResumeCard();});
+  audio.addEventListener('ratechange',()=>{const rate=audio.playbackRate;$('playbackRate').value=String(playbackRates.reduce((a,b)=>Math.abs(b-rate)<Math.abs(a-rate)?b:a,playbackRates[0]));$('fullSpeedReadout').textContent=`${rate}×`;if(textFullscreen&&fullscreenMode==='rsvp'&&!audio.paused)scheduleNextRsvpWord();saveState(true);});
+  function updateNowPlayingProgress(){const duration=Number.isFinite(audio.duration)?audio.duration:0,time=Number.isFinite(audio.currentTime)?audio.currentTime:0,pct=duration>0?Math.max(0,Math.min(100,time/duration*100)):0;$('npTimeCurrent').textContent=fmt(time);$('npTimeDuration').textContent=fmt(duration);$('fullSeek').style.setProperty('--seek-progress',`${pct}%`);if(duration>0&&!$('fullSeek').matches(':active'))$('fullSeek').value=String(Math.round(time/duration*1000));}
+  function updateNowPlayingLabels(){const c=chapters[current];if(!c)return;$('npChapterTitle').textContent=`Chapter ${String(c.ch).padStart(2,'0')}`;$('npPartLabel').textContent=`Part ${roman[c.part]}`;$('fullChapterLabel').textContent=`THE IDIOT · PART ${roman[c.part]} · CHAPTER ${String(c.ch).padStart(2,'0')}`;}
+  audio.addEventListener('timeupdate',()=>{$('timeCurrent').textContent=fmt(audio.currentTime);$('timeDuration').textContent=fmt(audio.duration);updateNowPlayingProgress();updateCurrentWord();updateResumeCard();saveState(false);});
+  audio.addEventListener('seeked',()=>{if(textFullscreen&&fullscreenMode==='rsvp'){stopRsvpScheduler();syncRsvpToAudio();scheduleNextRsvpWord();}else updateCurrentWord();});
+  audio.addEventListener('loadedmetadata',()=>{chapters[current].available=true;if(pendingRestoreTime>0){audio.currentTime=Math.min(pendingRestoreTime,Math.max(0,audio.duration-0.5));pendingRestoreTime=0;}setStatus('Audio loaded and ready.','good');renderList();$('timeDuration').textContent=fmt(audio.duration);updateNowPlayingLabels();updateNowPlayingProgress();updateResumeCard();saveState(true);});
+  audio.addEventListener('error',()=>{chapters[current].available=false;setStatus('Could not load this MP3. Make sure the filename and build/audio_in/merged_chapters/ path are correct.','warn');renderList();});
+  audio.addEventListener('ended',()=>{saveState(true);if(current<chapters.length-1)load(current+1,true);});
+  $('search').addEventListener('input',renderList);
+  function choosePart(part){filterPart=String(part);$('search').value='';document.querySelectorAll('#filters .filter').forEach(x=>x.classList.toggle('active',x.dataset.part===filterPart));document.querySelectorAll('#partCards [data-part]').forEach(x=>x.classList.toggle('active',x.dataset.part===filterPart));renderList();saveState(true);$('chapterPanel').scrollIntoView({behavior:'smooth',block:'start'});}
+  $('filters').addEventListener('click',e=>{const b=e.target.closest('button[data-part]');if(!b)return;choosePart(b.dataset.part);});
+  $('partCards').addEventListener('click',e=>{const b=e.target.closest('button[data-part]');if(!b)return;choosePart(b.dataset.part);document.body.classList.add('player-active');$('chapterPanel').scrollIntoView({behavior:'smooth',block:'start'});});
+  $('allChaptersBtn').addEventListener('click',()=>{choosePart('all');document.body.classList.add('player-active');$('chapterPanel').scrollIntoView({behavior:'smooth',block:'start'});});
+  $('browseBtn').addEventListener('click',()=>{document.body.classList.add('player-active');$('chapterPanel').scrollIntoView({behavior:'smooth',block:'start'});$('search').focus({preventScroll:true});});
+  $('resumeBtn').addEventListener('click',()=>{document.body.classList.add('player-active');openFullText('player',true);});
+  $('homeBtn').addEventListener('click',()=>{audio.pause();document.body.classList.remove('player-active');window.scrollTo({top:0,behavior:'smooth'});updateResumeCard();});
+  window.addEventListener('pagehide',()=>saveState(true));
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveState(true);});
+  $('themeBtn').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';$('themeBtn').innerHTML=dark?'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.4 8.4 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"/></svg>'; $('themeBtn').title=dark?'Light appearance':'Dark appearance';try{localStorage.setItem('audiobook-theme',dark?'dark':'light')}catch(e){}saveState(true);});
+  const initialTheme=savedState.theme || (()=>{try{return localStorage.getItem('audiobook-theme')||'light'}catch(e){return 'light'}})();
+  document.documentElement.dataset.theme=initialTheme==='dark'?'dark':'light';$('themeBtn').innerHTML=initialTheme==='dark'?'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.4 8.4 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"/></svg>'; $('themeBtn').title=initialTheme==='dark'?'Light appearance':'Dark appearance';
+  // Restore playback speed and the saved reader preferences.
+  audio.playbackRate=playbackRates.includes(Number(savedState.playbackRate))?Number(savedState.playbackRate):1;
+  $('playbackRate').value=String(audio.playbackRate);$('fullSpeedReadout').textContent=`${audio.playbackRate}×`;
+  $('functionWordsBtn').setAttribute('aria-pressed',String(showFunctionWords));$('functionWordsBtn').title=showFunctionWords?'Hide function words':'Show function words';$('followBtn').setAttribute('aria-pressed',String(followAudio));$('followBtn').textContent=followAudio?'◎':'○';
+  document.querySelectorAll('#filters .filter').forEach(x=>x.classList.toggle('active',x.dataset.part===filterPart));document.querySelectorAll('#partCards [data-part]').forEach(x=>x.classList.toggle('active',x.dataset.part===filterPart));
+  document.addEventListener('keydown',e=>{
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    if(e.target.matches('input,textarea,select,[contenteditable="true"]'))return;
+    if(e.code==='Space'){e.preventDefault();if(audio.paused)audio.play().catch(()=>{});else audio.pause();}
+    else if(e.key==='ArrowLeft' && e.shiftKey){e.preventDefault();audio.currentTime=Math.max(0,audio.currentTime-10);}
+    else if(e.key==='ArrowRight' && e.shiftKey){e.preventDefault();audio.currentTime=Math.min(Number.isFinite(audio.duration)?audio.duration:Infinity,audio.currentTime+10);}
+    else if(e.key==='ArrowLeft'){e.preventDefault();load(current-1,true);}
+    else if(e.key==='ArrowRight'){e.preventDefault();load(current+1,true);}
+  });
+  renderList(); load(current); updateResumeCard(); updateNowPlayingLabels(); updateNowPlayingProgress();
+  // Probe each file quietly so the chapter list can show which files exist.
+  Promise.all(chapters.map(async c=>{try{const r=await fetch(c.src,{method:'HEAD',cache:'no-store'});c.available=r.ok&&r.headers.get('content-type')!=='text/html';}catch(e){c.available=false;}})).then(()=>{renderList();if(chapters[current].available===false)setStatus('No MP3 detected for this chapter yet. Check build/audio_in/merged_chapters/ and refresh.','warn');});
+})();
+</script>
+</body>
+</html>
